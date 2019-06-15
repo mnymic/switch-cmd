@@ -56,10 +56,12 @@ echo 18.Joystick Properties control joy.cpl
 echo 19.taskkill /f /im explorer.exe
 echo -----------------------------
 SET /P NUMBER="Choose: "
-GOTO :CASE_00
+
+2>NUL CALL :CASE_%NUMBER% # jump to :CASE_red, :CASE_blue, etc.
+IF ERRORLEVEL 1 CALL :DEFAULT_CASE # If label doesn't exist
 :CASE_0
   sysdm.cpl add new hardware
-  GOTO E:CASE_00
+  GOTO :CASE_00
 :CASE_1
 control appwiz.cpl
   GOTO :CASE_00
@@ -115,9 +117,11 @@ control  modem.cpl
 control joy.cpl
   GOTO :CASE_00
   :CASE_19
-taskkill /f /im explorer.exe && explorer.exe 
-  pause
-  GOTO END_CASE   
+taskkill /f /im explorer.exe 
+  GOTO CASE_019
+  :CASE_019
+  explorer.exe && control
+  GOTO CASE_00
   :CASE_20 
 control  fonts
   GOTO :CASE_00
